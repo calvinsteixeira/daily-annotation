@@ -27,6 +27,14 @@ const dbAnnotation: IAnnotation[] = [
     humorLevel: 2,
     resume: "Um dia normal, nada especial.",
   },
+  {
+    id: "2",
+    createdAt: "22/06/2024",
+    description:
+      "Hoje eu acordei bem, tomei um banho e café da manhã bem cedo, logo após minha aula da faculdade. Fui super produtivo, o dia estava bonito, com bastante sol porém com um clima agradável, nem frio e nem calor. Durante a noite continuei meus projetos e fui até a sorveteria comer um açaí com minha esposa, depois assistimos Harry Potter.",
+    humorLevel: 3,
+    resume: "Um dia bem divertido.",
+  }
 ];
 
 export { dbAnnotation, dbHumorLevel };
