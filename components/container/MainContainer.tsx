@@ -1,4 +1,4 @@
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, StatusBar } from "react-native";
 import React, { ReactNode } from "react";
 
 type Props = {
@@ -6,7 +6,7 @@ type Props = {
 };
 
 const MainContainer = ({ children }: Props) => {
-  return <SafeAreaView style={{ flex: 1, paddingHorizontal: 20 }}>{children}</SafeAreaView>;
+  return <SafeAreaView style={{ flex: 1, paddingHorizontal: 30, paddingTop: StatusBar.currentHeight }}>{children}</SafeAreaView>;
 };
 
 export default MainContainer;
