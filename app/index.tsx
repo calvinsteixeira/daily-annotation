@@ -7,10 +7,12 @@ export default function Index() {
   return (
     <MainContainer>
       <View style={{ flex: 1, paddingTop: 30 }}>
-        <Text style={globalTextStyles.titlePage}>Meus Processos</Text>
+        <Text style={globalTextStyles.titlePage}>Minhas Anotações</Text>
         <FlatList
+          style={{ marginTop: 20 }}
           data={dbAnnotation}
           keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={() => <View style={{ height: 10 }}></View>}
           renderItem={({item}) => (
             <PreviewAnnotation
               id={item.id}

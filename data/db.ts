@@ -24,7 +24,7 @@ const dbAnnotation: IAnnotation[] = [
     createdAt: "24/06/2024",
     description:
       "Hoje eu acordei um pouco mal, acabei esquecendo do meu lanche da manhã e fui para o trabalho sem comer. Consegui ser produtivo, mas estava muito cansado do dia anterior. Ao chegar do trabalho pude descansar melhor e estudar alguns assuntos pendentes.",
-    humorLevel: 1,
+    humorLevel: 2,
     resume: "Um dia normal, nada especial.",
   },
 ];
