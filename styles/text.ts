@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const globalTextStyles = StyleSheet.create({
     titlePage: {
-        fontSize: 22,
+        fontSize: 26,
         fontWeight: "700"
     }
 })

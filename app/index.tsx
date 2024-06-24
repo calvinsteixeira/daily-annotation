@@ -5,7 +5,7 @@ import { globalTextStyles } from "@/styles/text";
 export default function Index() {
   return (
     <MainContainer>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, paddingTop: 30 }}>
         <Text style={globalTextStyles.titlePage}>Meus Processos</Text>
       </View>
     </MainContainer>

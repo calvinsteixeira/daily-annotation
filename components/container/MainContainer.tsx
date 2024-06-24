@@ -6,7 +6,17 @@ type Props = {
 };
 
 const MainContainer = ({ children }: Props) => {
-  return <SafeAreaView style={{ flex: 1, paddingHorizontal: 30, paddingTop: StatusBar.currentHeight }}>{children}</SafeAreaView>;
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingHorizontal: 30,
+        paddingTop: StatusBar.currentHeight,
+      }}
+    >
+      {children}
+    </SafeAreaView>
+  );
 };
 
 export default MainContainer;
