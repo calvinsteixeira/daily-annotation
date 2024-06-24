@@ -18,7 +18,6 @@ const PreviewAnnotation = ({
         paddingHorizontal: 16,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
         borderRadius: 6
       }}
     >
