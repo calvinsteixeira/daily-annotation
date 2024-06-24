@@ -1,11 +1,12 @@
 import { Text, View } from "react-native";
 import { MainContainer } from "@/components";
+import { globalTextStyles } from "@/styles/text";
 
 export default function Index() {
   return (
     <MainContainer>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Conteúdo inicial</Text>
+      <View style={{ flex: 1, alignItems: "center" }}>
+        <Text style={globalTextStyles.titlePage}>Meus Processos</Text>
       </View>
     </MainContainer>
   );
