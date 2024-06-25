@@ -18,11 +18,11 @@ const PreviewAnnotation = ({
         paddingHorizontal: 16,
         flexDirection: "row",
         alignItems: "center",
-        borderRadius: 6
+        borderRadius: 6        
       }}
     >
-      <Text style={{ color: "white" }}>{createdAt} - </Text>
-      <Text style={{ color: "white" }}>{dbHumorLevel.find(humor => humor.level == humorLevel)?.symbol}{" "}{resume}</Text>
+      <Text style={{ color: "white", fontSize: 14 }}>{createdAt} - </Text>
+      <Text numberOfLines={1} style={{ fontSize: 14, color: "white", flex: 1 }}>{dbHumorLevel.find(humor => humor.level == humorLevel)?.symbol}{"  "}{resume}</Text>
     </View>
   );
 };

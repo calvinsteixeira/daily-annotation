@@ -33,7 +33,7 @@ const dbAnnotation: IAnnotation[] = [
     description:
       "Hoje eu acordei bem, tomei um banho e café da manhã bem cedo, logo após minha aula da faculdade. Fui super produtivo, o dia estava bonito, com bastante sol porém com um clima agradável, nem frio e nem calor. Durante a noite continuei meus projetos e fui até a sorveteria comer um açaí com minha esposa, depois assistimos Harry Potter.",
     humorLevel: 3,
-    resume: "Um dia bem divertido.",
+    resume: "Harry Potter e Açaí",
   }
 ];
 

@@ -7,7 +7,7 @@ export default function Index() {
   return (
     <MainContainer>
       <View style={{ flex: 1, paddingTop: 30 }}>
-        <Text style={globalTextStyles.titlePage}>Minhas Anotações</Text>
+        <Text style={globalTextStyles.titlePage}>Meus processos</Text>
         <FlatList
           style={{ marginTop: 20 }}
           data={dbAnnotation}
