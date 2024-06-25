@@ -26,7 +26,7 @@ const SelectBox = ({ data, value, placeholder, onChange }: ISelectBox) => {
       inputSearchStyle={styles.inputSearchStyle}
       iconStyle={styles.iconStyle}
       data={data}
-      search
+      search={data.length > 10}
       maxHeight={300}
       labelField="label"
       valueField="value"
