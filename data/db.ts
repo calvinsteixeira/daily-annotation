@@ -34,7 +34,29 @@ const dbAnnotation: IAnnotation[] = [
       "Hoje eu acordei bem, tomei um banho e café da manhã bem cedo, logo após minha aula da faculdade. Fui super produtivo, o dia estava bonito, com bastante sol porém com um clima agradável, nem frio e nem calor. Durante a noite continuei meus projetos e fui até a sorveteria comer um açaí com minha esposa, depois assistimos Harry Potter.",
     humorLevel: 3,
     resume: "Harry Potter e Açaí",
-  }
+  },
 ];
 
-export { dbAnnotation, dbHumorLevel };
+const dbYears = [
+  {
+    label: "2024",
+    value: "2024",
+  },
+];
+
+const dbMonths = [
+  { label: "Janeiro", value: "1" },
+  { label: "Fevereiro", value: "2" },
+  { label: "Março", value: "3" },
+  { label: "Abril", value: "4" },
+  { label: "Maio", value: "5" },
+  { label: "Junho", value: "6" },
+  { label: "Julho", value: "7" },
+  { label: "Agosto", value: "8" },
+  { label: "Setembro", value: "9" },
+  { label: "Outubro", value: "10" },
+  { label: "Novembro", value: "11" },
+  { label: "Dezembro", value: "12" },
+];
+
+export { dbAnnotation, dbHumorLevel, dbMonths, dbYears };
