@@ -3,7 +3,8 @@ import { Text } from "@rneui/themed";
 import React from "react";
 import { MainContainer, PreviewAnnotation, SelectBox } from "@/components";
 import { globalTextStyles } from "@/styles/text";
-import { dbAnnotation, dbMonths, dbYears } from "@/data/db";
+import { dbAnnotation } from "@/data/db";
+import { dbMonths, dbYears } from "@/data/auxData"
 
 export default function Index() {
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
