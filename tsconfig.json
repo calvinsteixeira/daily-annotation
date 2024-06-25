@@ -5,7 +5,8 @@
     "paths": {
       "@/*": [
         "./*",
-        "./components/index"
+        "./components/index",
+        "./icons/index"
       ]
     }
   },
