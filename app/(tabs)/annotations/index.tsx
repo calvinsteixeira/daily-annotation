@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, View, Alert } from "react-native";
 import { Text, Skeleton, Button, useTheme } from "@rneui/themed";
 import React from "react";
 import { MainContainer, PreviewAnnotation, SelectBox } from "@/components";
@@ -6,6 +6,7 @@ import { globalTextStyles } from "@/styles/text";
 import { Plus } from "@/icons";
 import { dbMonths, dbYears } from "@/data/auxData";
 import { useAnnotationData } from "@/store";
+import { IAnnotation } from "@/data/types";
 
 export default function Index() {
   const annotations = useAnnotationData((state) => state);
@@ -19,6 +20,39 @@ export default function Index() {
       setLoadingData(false);
     }, 3500);
   }, []);
+
+  function simulateRequest(
+    callBack: () => void,
+    timerOpts?: { timeUntilRender: number }
+  ) {
+    setLoadingData(true);
+    setTimeout(() => {
+      setLoadingData(false);
+      callBack();
+    }, timerOpts?.timeUntilRender || 3500);
+  }
+
+  function handleDeleteAnnotation(annotationId: IAnnotation["id"]) {
+    Alert.alert(
+      "Deletar anotação",
+      "Tem certeza que deseja deletar essa anotação?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Deletar",
+          style: "destructive",
+          onPress: () =>
+            simulateRequest(() => annotations.deleteAnnotation(annotationId), {
+              timeUntilRender: 1000,
+            }),
+        },
+      ],
+      { cancelable: false }
+    );
+  }
 
   return (
     <MainContainer>
@@ -93,7 +127,7 @@ export default function Index() {
                 description={item.description}
                 humorLevel={item.humorLevel}
                 resume={item.resume}
-                onDelete={annotations.deleteAnnotation}
+                onDelete={handleDeleteAnnotation}
               />
             )}
           />
