@@ -1,13 +1,15 @@
 import { FlatList, View } from "react-native";
-import { Text, Skeleton, Button } from "@rneui/themed";
+import { Text, Skeleton, Button, useTheme } from "@rneui/themed";
 import React from "react";
 import { MainContainer, PreviewAnnotation, SelectBox } from "@/components";
 import { globalTextStyles } from "@/styles/text";
+import { Plus } from "@/icons";
 import { dbMonths, dbYears } from "@/data/auxData";
 import { useAnnotationData } from "@/store";
 
 export default function Index() {
-  const annotations = useAnnotationData((state) => state)
+  const annotations = useAnnotationData((state) => state);
+  const { theme } = useTheme();
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
@@ -54,7 +56,18 @@ export default function Index() {
             />
           </View>
         </View>
-        <Button type="solid" buttonStyle={{ marginTop: 14 }}>Adicionar anotação</Button>
+        <Button
+          type="solid"
+          titleStyle={{ color: "#3d93e3" }}
+          buttonStyle={{
+            marginTop: 14,
+            backgroundColor: "transparent",
+            borderColor: "#3d93e3",
+            borderWidth: 1,
+          }}
+        >
+          <Plus size={20} color={"#3d93e3"} /> Nova anotação
+        </Button>
         <Text style={{ marginTop: 20, marginBottom: 12 }}>
           Confira suas anotações do mês de{" "}
           <Text style={{ fontWeight: 700 }}>{monthFilterValue.label}</Text>:
@@ -62,7 +75,9 @@ export default function Index() {
         {loadingData ? (
           <View style={{ flexDirection: "column", gap: 10 }}>
             {Array.from({ length: 15 }).map((_, index) => {
-              return <Skeleton key={index} style={{ opacity: 0.5 }} height={30} />;
+              return (
+                <Skeleton key={index} style={{ opacity: 0.5 }} height={30} />
+              );
             })}
           </View>
         ) : (
@@ -82,7 +97,7 @@ export default function Index() {
               />
             )}
           />
-        )}        
+        )}
       </View>
     </MainContainer>
   );
