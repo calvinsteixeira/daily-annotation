@@ -1,7 +1,8 @@
 import { IAnnotation } from "@/data/types"
 
 interface IUseAnnotationData {
-    annotations: IAnnotation[]
+    data: IAnnotation[]
+    deleteAnnotation: (annotationId: IAnnotation['id']) => void
 }
 
 export type { IUseAnnotationData }

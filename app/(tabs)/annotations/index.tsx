@@ -7,7 +7,7 @@ import { dbMonths, dbYears } from "@/data/auxData";
 import { useAnnotationData } from "@/store";
 
 export default function Index() {
-  const annotations = useAnnotationData((state) => state.annotations)
+  const annotations = useAnnotationData((state) => state)
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
@@ -67,7 +67,7 @@ export default function Index() {
           </View>
         ) : (
           <FlatList
-            data={annotations}
+            data={annotations.data}
             style={{ marginBottom: 14 }}
             keyExtractor={(item) => item.id}
             ItemSeparatorComponent={() => <View style={{ height: 10 }}></View>}
@@ -78,6 +78,7 @@ export default function Index() {
                 description={item.description}
                 humorLevel={item.humorLevel}
                 resume={item.resume}
+                onDelete={annotations.deleteAnnotation}
               />
             )}
           />
