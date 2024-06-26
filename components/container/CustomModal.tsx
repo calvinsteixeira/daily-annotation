@@ -1,11 +1,13 @@
 import { Text } from "@rneui/themed";
 import React, { ReactElement } from "react";
+import { X } from "@/icons";
 import {
+  Keyboard,
   Modal,
   ModalBaseProps,
   StyleSheet,
-  TouchableWithoutFeedback,
   View,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 interface ICustomModal
@@ -27,7 +29,7 @@ const CustomModal = ({
       onRequestClose={onRequestClose}
       visible={visible}
     >
-      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={onRequestClose}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View
           style={{
             flex: 1,
@@ -39,10 +41,10 @@ const CustomModal = ({
           <View
             style={{
               backgroundColor: "#fff",
-              padding: 20,
+              paddingHorizontal: 30,
+              paddingVertical: 30,
               borderRadius: 10,
               width: "80%",
-              alignItems: "center",
             }}
           >
             <View
@@ -53,6 +55,11 @@ const CustomModal = ({
                 marginBottom: 15,
               }}
             >
+              <X
+                onPress={onRequestClose}
+                style={{ position: "absolute" }}
+                color={"#000"}
+              />
               <Text
                 numberOfLines={1}
                 style={{
@@ -60,6 +67,8 @@ const CustomModal = ({
                   textAlign: "center",
                   fontWeight: "700",
                   fontSize: 20,
+                  marginTop: 20,
+                  marginBottom: 20,
                 }}
               >
                 {title}

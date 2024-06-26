@@ -7,7 +7,14 @@ const theme = createTheme({
   },
   darkColors: {
     primary: "blue",
-  }, 
+  },
+  components: {
+    Input: {
+      leftIconContainerStyle: {
+        marginRight: 8,
+      },
+    },
+  },
 });
 export default function RootLayout() {
   return (

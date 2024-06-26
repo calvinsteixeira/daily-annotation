@@ -5,16 +5,19 @@ const dbHumorLevel: IHumorLevel[] = [
     id: "1",
     level: 3,
     symbol: "😃",
+    description: "Ótimo"
   },
   {
     id: "2",
     level: 2,
     symbol: "😐",
+    description: "Normal"
   },
   {
     id: "3",
     level: 1,
     symbol: "😔",
+    description: "Ruim"
   },
 ];
 

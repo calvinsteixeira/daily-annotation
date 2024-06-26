@@ -1,27 +1,38 @@
 import { StyleSheet, View } from "react-native";
-import { Text } from "@rneui/themed";
+import { Smile } from "@/icons";
 import React from "react";
 import { Dropdown } from "react-native-element-dropdown";
+import { useTheme } from "@rneui/themed";
 
-interface IOption {
+interface ISelectBoxOption {
   label: string;
   value: string;
 }
 
 interface ISelectBox {
-  data: IOption[];
-  value: IOption;
+  data: ISelectBoxOption[];
+  value: ISelectBoxOption | null;
   placeholder: string;
-  onChange: (item: IOption) => void;
+  onChange: (item: ISelectBoxOption) => void;
 }
 
 const SelectBox = ({ data, value, placeholder, onChange }: ISelectBox) => {
+  const { theme } = useTheme();
   const [isFocus, setIsFocus] = React.useState<boolean>(false);
 
   return (
     <Dropdown
-      style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
-      placeholderStyle={styles.placeholderStyle}
+      style={[
+        styles.dropdown,
+        {
+          borderBottomColor: theme.colors.grey4,
+          borderBottomWidth: 1.5,
+        },
+      ]}
+      placeholderStyle={[
+        styles.placeholderStyle,
+        { color: theme.colors.grey3 },
+      ]}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
       iconStyle={styles.iconStyle}
@@ -43,6 +54,8 @@ const SelectBox = ({ data, value, placeholder, onChange }: ISelectBox) => {
   );
 };
 
+export type { ISelectBoxOption };
+
 export default SelectBox;
 
 const styles = StyleSheet.create({
@@ -52,8 +65,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 50,
-    borderColor: "gray",
-    borderWidth: 0.5,
+    borderBottomWidth: 2,
     borderRadius: 8,
     paddingHorizontal: 8,
   },
@@ -70,7 +82,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 17,
   },
   selectedTextStyle: {
     fontSize: 16,

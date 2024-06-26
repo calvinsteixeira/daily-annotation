@@ -10,6 +10,7 @@ interface IHumorLevel {
     id: string;
     symbol: string;    
     level: 1 | 2 | 3
+    description: "Ótimo" | "Normal" | "Ruim"
 }
 
 export type { IAnnotation, IHumorLevel }

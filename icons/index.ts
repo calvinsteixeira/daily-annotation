@@ -1,3 +1,3 @@
-import { StickyNote, X, Plus } from 'lucide-react-native'
+import { StickyNote, X, Plus, Pen, Smile  } from 'lucide-react-native'
 
-export { StickyNote, X, Plus }
+export { StickyNote, X, Plus, Pen, Smile  }
