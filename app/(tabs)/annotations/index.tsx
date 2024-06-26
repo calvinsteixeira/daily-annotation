@@ -3,10 +3,11 @@ import { Text, Skeleton, Button } from "@rneui/themed";
 import React from "react";
 import { MainContainer, PreviewAnnotation, SelectBox } from "@/components";
 import { globalTextStyles } from "@/styles/text";
-import { dbAnnotation } from "@/data/db";
 import { dbMonths, dbYears } from "@/data/auxData";
+import { useAnnotationData } from "@/store";
 
 export default function Index() {
+  const annotations = useAnnotationData((state) => state.annotations)
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
@@ -66,7 +67,7 @@ export default function Index() {
           </View>
         ) : (
           <FlatList
-            data={dbAnnotation}
+            data={annotations}
             style={{ marginBottom: 14 }}
             keyExtractor={(item) => item.id}
             ItemSeparatorComponent={() => <View style={{ height: 10 }}></View>}
