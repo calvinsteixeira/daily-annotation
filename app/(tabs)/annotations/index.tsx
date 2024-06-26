@@ -1,5 +1,5 @@
 import { FlatList, View } from "react-native";
-import { Text, Skeleton } from "@rneui/themed";
+import { Text, Skeleton, Button } from "@rneui/themed";
 import React from "react";
 import { MainContainer, PreviewAnnotation, SelectBox } from "@/components";
 import { globalTextStyles } from "@/styles/text";
@@ -53,7 +53,8 @@ export default function Index() {
             />
           </View>
         </View>
-        <Text style={{ marginTop: 30, marginBottom: 12 }}>
+        <Button type="solid" buttonStyle={{ marginTop: 14 }}>Adicionar anotação</Button>
+        <Text style={{ marginTop: 20, marginBottom: 12 }}>
           Confira suas anotações do mês de{" "}
           <Text style={{ fontWeight: 700 }}>{monthFilterValue.label}</Text>:
         </Text>
@@ -66,6 +67,7 @@ export default function Index() {
         ) : (
           <FlatList
             data={dbAnnotation}
+            style={{ marginBottom: 14 }}
             keyExtractor={(item) => item.id}
             ItemSeparatorComponent={() => <View style={{ height: 10 }}></View>}
             renderItem={({ item }) => (
@@ -78,7 +80,7 @@ export default function Index() {
               />
             )}
           />
-        )}
+        )}        
       </View>
     </MainContainer>
   );
