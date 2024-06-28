@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
+    "@hookform/resolvers": "^3.6.0",
     "@react-navigation/native": "^6.0.2",
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.8",
@@ -31,6 +32,7 @@
     "lucide-react-native": "^0.367.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.52.0",
     "react-native": "0.74.2",
     "react-native-element-dropdown": "^2.12.1",
     "react-native-gesture-handler": "~2.16.1",
@@ -38,6 +40,7 @@
     "react-native-safe-area-context": "4.10.1",
     "react-native-screens": "3.31.1",
     "react-native-web": "~0.19.10",
+    "yup": "^1.4.0",
     "zustand": "^4.5.3"
   },
   "devDependencies": {

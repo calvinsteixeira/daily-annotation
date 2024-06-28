@@ -1,6 +1,6 @@
 import { FlatList, View, Alert } from "react-native";
 import { Text, Skeleton, Button, Input, useTheme } from "@rneui/themed";
-import React from "react";
+import React, { ReactElement } from "react";
 import {
   MainContainer,
   PreviewAnnotation,
@@ -14,6 +14,9 @@ import { useAnnotationData } from "@/store";
 import { dbHumorLevel } from "@/data/db";
 import { IAnnotation } from "@/data/types";
 import { ISelectBoxOption } from "@/components/inputs/SelectBox";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 export default function Index() {
   const annotations = useAnnotationData((state) => state);
@@ -25,8 +28,36 @@ export default function Index() {
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
   const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
   const [modalTitle, setModalTitle] = React.useState<
-    "Novo processo" | "Editar processo" | ""
+    "Nova anotação" | "Editar anotação" | ""
   >("");
+
+  const annotationModalSchema = yup.object({
+    resume: yup.string().required("Campo obrigatório"),
+    description: yup.string().required("Campo obrigatório"),
+    humorLevel: yup.string().required("Campo obrigatório"),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    reset: resetForm,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(annotationModalSchema),
+    defaultValues: {
+      resume: "",
+      description: "",
+      humorLevel: "",
+    },
+  });
+
+  const onSubmit = (data: {
+    resume: string;
+    description: string;
+    humorLevel: string;
+  }) => {
+    console.log(data);
+  };
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -72,28 +103,77 @@ export default function Index() {
       <CustomModal
         title={modalTitle}
         visible={visibleModal}
-        onRequestClose={() => setVisibleModal(false)}
+        onRequestClose={() => {
+          resetForm()
+          setVisibleModal(false)
+        }}
       >
         <View>
-          <Input placeholder="Título" />
-          <Input placeholder="Descrição" />
-          <SelectBox
-            data={dbHumorLevel.map((humorLevel) => {
-              return {
-                label: humorLevel.symbol + "  " + humorLevel.description,
-                value: humorLevel.id,
-              };
-            })}
-            value={humorLevelValue}
-            placeholder="Nível de humor"
-            onChange={(item) => {
-              setHumorLevelValue(item);
+          <Controller
+            control={control}
+            rules={{
+              required: true,
             }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Título"
+                errorMessage={errors.resume?.message}
+              />
+            )}
+            name="resume"
+          />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Descrição"
+                errorMessage={errors.description?.message}
+              />
+            )}
+            name="description"
+          />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <SelectBox
+                data={dbHumorLevel.map((humorLevel) => {
+                  return {
+                    label: humorLevel.symbol + "  " + humorLevel.description,
+                    value: humorLevel.id,
+                  };
+                })}
+                value={value}
+                placeholder="Classificação do dia"
+                onChange={(selectedItem) => {
+                  onChange(selectedItem.value);
+                }}
+                onBlur={onBlur}
+                errorMessage={errors.humorLevel?.message}
+              />
+            )}
+            name="humorLevel"
+          />
+          <Button
+            buttonStyle={{ marginTop: 50 }}
+            title="Criar"
+            onPress={handleSubmit(onSubmit)}
           />
         </View>
       </CustomModal>
       <View style={{ flex: 1, paddingTop: 30 }}>
-        <Text style={globalTextStyles.titlePage}>Meus processos</Text>
+        <Text style={globalTextStyles.titlePage}>Minhas anotações</Text>
         <Text style={{ marginTop: 6 }}>
           Aqui você encontra todas as suas anotações, filtre pelo ano e mês se
           preferir.
@@ -105,7 +185,7 @@ export default function Index() {
             <Text>Filtre pelo ano</Text>
             <SelectBox
               data={dbYears}
-              value={yearsFilterValue}
+              value={yearsFilterValue.value}
               placeholder="Selecionar ano"
               onChange={(item) => {
                 setYearsFilterValue(item);
@@ -118,7 +198,7 @@ export default function Index() {
             <Text>Filtre pelo mês</Text>
             <SelectBox
               data={dbMonths}
-              value={monthFilterValue}
+              value={monthFilterValue.value}
               placeholder="Selecionar mês"
               onChange={(item) => {
                 setMonthFilterValue(item);
@@ -128,7 +208,7 @@ export default function Index() {
         </View>
         <Button
           onPress={() => {
-            setModalTitle("Novo processo");
+            setModalTitle("Nova anotação");
             setVisibleModal(true);
           }}
           type="solid"

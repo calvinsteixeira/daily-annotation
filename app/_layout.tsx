@@ -13,6 +13,9 @@ const theme = createTheme({
       leftIconContainerStyle: {
         marginRight: 8,
       },
+      errorStyle: {
+        fontSize: 16
+      }
     },
   },
 });

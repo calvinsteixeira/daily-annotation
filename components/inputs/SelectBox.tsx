@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { Smile } from "@/icons";
 import React from "react";
 import { Dropdown } from "react-native-element-dropdown";
-import { useTheme } from "@rneui/themed";
+import { useTheme, Text } from "@rneui/themed";
 
 interface ISelectBoxOption {
   label: string;
@@ -11,46 +11,56 @@ interface ISelectBoxOption {
 
 interface ISelectBox {
   data: ISelectBoxOption[];
-  value: ISelectBoxOption | null;
+  value: string;
   placeholder: string;
   onChange: (item: ISelectBoxOption) => void;
+  onBlur?: () => void;
+  onFocus?: () => void;
+  errorMessage?: string;
 }
 
-const SelectBox = ({ data, value, placeholder, onChange }: ISelectBox) => {
+const SelectBox = ({
+  data,
+  value,
+  placeholder,
+  onChange,
+  onBlur,
+  onFocus,
+  errorMessage
+}: ISelectBox) => {
   const { theme } = useTheme();
   const [isFocus, setIsFocus] = React.useState<boolean>(false);
 
   return (
-    <Dropdown
-      style={[
-        styles.dropdown,
-        {
-          borderBottomColor: theme.colors.grey4,
-          borderBottomWidth: 1.5,
-        },
-      ]}
-      placeholderStyle={[
-        styles.placeholderStyle,
-        { color: theme.colors.grey3 },
-      ]}
-      selectedTextStyle={styles.selectedTextStyle}
-      inputSearchStyle={styles.inputSearchStyle}
-      iconStyle={styles.iconStyle}
-      data={data}
-      search={data.length > 10}
-      maxHeight={300}
-      labelField="label"
-      valueField="value"
-      placeholder={!isFocus ? placeholder || "Selecionar opção" : "..."}
-      searchPlaceholder="Pesquisar..."
-      value={value}
-      onFocus={() => setIsFocus(true)}
-      onBlur={() => setIsFocus(false)}
-      onChange={(item) => {
-        onChange(item);
-        setIsFocus(false);
-      }}
-    />
+    <>
+      <Dropdown
+        style={[
+          styles.dropdown,
+          {
+            borderBottomColor: theme.colors.grey3,
+            borderBottomWidth: 1.5,
+          },
+        ]}
+        placeholderStyle={[
+          styles.placeholderStyle,
+          { color: theme.colors.grey3 },
+        ]}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        data={data}
+        search={data.length > 10}
+        maxHeight={300}
+        labelField="label"
+        valueField="value"
+        placeholder={!isFocus ? placeholder || "Selecionar opção" : "..."}
+        searchPlaceholder="Pesquisar..."
+        value={value}
+        onBlur={onBlur}
+        onChange={onChange}
+      />
+      {errorMessage && <Text style={{ color: theme.colors.error, fontSize: 16, fontWeight: "600", marginTop: 5, left: 12 }}>Campo obrigatório</Text>}
+    </>
   );
 };
 
