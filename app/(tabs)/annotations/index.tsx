@@ -33,6 +33,7 @@ export default function Index() {
     title: yup.string().required("Campo obrigatório"),
     description: yup.string().required("Campo obrigatório"),
     humorLevel: yup.string().required("Campo obrigatório"),
+    createdAt: yup.string().required('Campo obrigatório')
   });
 
   const {
@@ -46,6 +47,7 @@ export default function Index() {
       title: "",
       description: "",
       humorLevel: "",
+      createdAt: format(new Date(), 'dd/MM/yyyy').toString()
     },
   });
 
@@ -53,11 +55,8 @@ export default function Index() {
     title: string;
     description: string;
     humorLevel: string;
-  }) => {
-    const requestBody = {
-      ...data,
-      createdAt: format(new Date(), 'dd/MM/yyy')
-    }
+    createdAt: string;
+  }) => {  
   };
 
   React.useEffect(() => {
@@ -144,6 +143,23 @@ export default function Index() {
               />
             )}
             name="description"
+          />
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                maxLength={10}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholder="Data"
+                errorMessage={errors.createdAt?.message}
+              />
+            )}
+            name="createdAt"
           />
           <Controller
             control={control}
