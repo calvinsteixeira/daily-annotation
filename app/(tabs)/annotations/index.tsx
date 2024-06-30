@@ -1,4 +1,4 @@
-import { FlatList, View, Alert } from "react-native";
+import { FlatList, View, Alert, ScrollView } from "react-native";
 import { Text, Skeleton, Button, Input, useTheme } from "@rneui/themed";
 import React, { ReactElement } from "react";
 import {
@@ -110,93 +110,95 @@ export default function Index() {
           setVisibleModal(false);
         }}
       >
-        <View>
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                maxLength={25}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Título"
-                errorMessage={errors.title?.message}
-              />
-            )}
-            name="title"
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                maxLength={50}
-                multiline
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                placeholder="Descrição"
-                errorMessage={errors.description?.message}
-              />
-            )}
-            name="description"
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInputMask
-                type={"datetime"}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                customTextInput={Input}
-                customTextInputProps={{
-                  maxLength: 10,
-                  placeholder: "Data",
-                  errorMessage: errors.createdAt?.message,
-                }}
-              />
-            )}
-            name="createdAt"
-          />
-          <Controller
-            control={control}
-            rules={{
-              required: true,
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <SelectBox
-                data={dbHumorLevel.map((humorLevel) => {
-                  return {
-                    label: humorLevel.symbol + "  " + humorLevel.description,
-                    value: humorLevel.id,
-                  };
-                })}
-                value={value}
-                placeholder="Classificação do dia"
-                onChange={(selectedItem) => {
-                  onChange(selectedItem.value);
-                }}
-                onBlur={onBlur}
-                errorMessage={errors.humorLevel?.message}
-              />
-            )}
-            name="humorLevel"
-          />
+        <>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  maxLength={25}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Título"
+                  errorMessage={errors.title?.message}
+                />
+              )}
+              name="title"
+            />
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  maxLength={50}
+                  multiline
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Descrição"
+                  errorMessage={errors.description?.message}
+                />
+              )}
+              name="description"
+            />
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInputMask
+                  type={"datetime"}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  customTextInput={Input}
+                  customTextInputProps={{
+                    maxLength: 10,
+                    placeholder: "Data",
+                    errorMessage: errors.createdAt?.message,
+                  }}
+                />
+              )}
+              name="createdAt"
+            />
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <SelectBox
+                  data={dbHumorLevel.map((humorLevel) => {
+                    return {
+                      label: humorLevel.symbol + "  " + humorLevel.description,
+                      value: humorLevel.id,
+                    };
+                  })}
+                  value={value}
+                  placeholder="Classificação do dia"
+                  onChange={(selectedItem) => {
+                    onChange(selectedItem.value);
+                  }}
+                  onBlur={onBlur}
+                  errorMessage={errors.humorLevel?.message}
+                />
+              )}
+              name="humorLevel"
+            />
+          </ScrollView>
           <Button
             buttonStyle={{ marginTop: 40 }}
             title="Criar"
             onPress={handleSubmit(onSubmit)}
           />
-        </View>
+        </>
       </CustomModal>
       <View style={{ flex: 1, paddingTop: 30 }}>
         <Text style={globalTextStyles.titlePage}>Minhas anotações</Text>

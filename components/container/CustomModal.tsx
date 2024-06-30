@@ -45,6 +45,7 @@ const CustomModal = ({
               paddingVertical: 30,
               borderRadius: 10,
               width: "80%",
+              maxHeight: "80%"
             }}
           >
             <View
