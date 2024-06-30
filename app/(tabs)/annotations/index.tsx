@@ -16,7 +16,8 @@ import { IAnnotation } from "@/data/types";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { format } from 'date-fns'
+import { format } from "date-fns";
+import { TextInputMask } from "react-native-masked-text";
 
 export default function Index() {
   const annotations = useAnnotationData((state) => state);
@@ -33,7 +34,7 @@ export default function Index() {
     title: yup.string().required("Campo obrigatório"),
     description: yup.string().required("Campo obrigatório"),
     humorLevel: yup.string().required("Campo obrigatório"),
-    createdAt: yup.string().required('Campo obrigatório')
+    createdAt: yup.string().required("Campo obrigatório"),
   });
 
   const {
@@ -47,7 +48,7 @@ export default function Index() {
       title: "",
       description: "",
       humorLevel: "",
-      createdAt: format(new Date(), 'dd/MM/yyyy').toString()
+      createdAt: format(new Date(), "dd/MM/yyyy").toString(),
     },
   });
 
@@ -56,7 +57,8 @@ export default function Index() {
     description: string;
     humorLevel: string;
     createdAt: string;
-  }) => {  
+  }) => {
+    console.log(data);
   };
 
   React.useEffect(() => {
@@ -150,13 +152,17 @@ export default function Index() {
               required: true,
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input
-                maxLength={10}
-                onBlur={onBlur}
+              <TextInputMask
+                type={"datetime"}
                 onChangeText={onChange}
+                onBlur={onBlur}
                 value={value}
-                placeholder="Data"
-                errorMessage={errors.createdAt?.message}
+                customTextInput={Input}
+                customTextInputProps={{
+                  maxLength: 10,
+                  placeholder: "Data",
+                  errorMessage: errors.createdAt?.message,
+                }}
               />
             )}
             name="createdAt"
