@@ -27,7 +27,7 @@ const dbAnnotation: IAnnotation[] = [
     createdAt: "01/01/2024",
     description:
       "Hoje eu acordei um pouco mal, acabei esquecendo do meu lanche da manhã e fui para o trabalho sem comer. Consegui ser produtivo, mas estava muito cansado do dia anterior. Ao chegar do trabalho pude descansar melhor e estudar alguns assuntos pendentes.",
-    humorLevel: 2,
+    humorLevel: "2",
     title: "Um dia normal, nada especial.",
   },
   {
@@ -35,7 +35,7 @@ const dbAnnotation: IAnnotation[] = [
     createdAt: "20/06/2024",
     description:
       "Hoje eu acordei bem, tomei um banho e café da manhã bem cedo, logo após minha aula da faculdade. Fui super produtivo, o dia estava bonito, com bastante sol porém com um clima agradável, nem frio e nem calor. Durante a noite continuei meus projetos e fui até a sorveteria comer um açaí com minha esposa, depois assistimos Harry Potter.",
-    humorLevel: 3,
+    humorLevel: "3",
     title: "Harry Potter e Açaí",
   } 
 ];

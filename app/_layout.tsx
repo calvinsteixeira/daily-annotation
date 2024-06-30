@@ -3,7 +3,7 @@ import { ThemeProvider, createTheme } from "@rneui/themed";
 
 const theme = createTheme({
   lightColors: {
-    primary: "#FF7A0F",
+    primary: "#3632a8",
   },
   darkColors: {
     primary: "blue",
@@ -17,6 +17,11 @@ const theme = createTheme({
         fontSize: 16
       }
     },
+    Button: {
+      buttonStyle: {
+        borderColor: "#3632a8"
+      }
+    }
   },
 });
 export default function RootLayout() {

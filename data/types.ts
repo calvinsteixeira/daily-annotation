@@ -1,7 +1,7 @@
 interface IAnnotation {
     id: string;
     createdAt: string;
-    humorLevel: number;
+    humorLevel: string;
     title: string;
     description: string;
 }

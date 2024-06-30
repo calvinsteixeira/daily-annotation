@@ -28,9 +28,9 @@ const PreviewAnnotation = ({
         borderRadius: 6,
       }}
     >
-      <Text style={{ color: "white", fontSize: 14 }}>{createdAt} - </Text>
-      <Text numberOfLines={1} style={{ fontSize: 14, color: "white", flex: 1 }}>
-        {dbHumorLevel.find((humor) => humor.level == humorLevel)?.symbol}
+      <Text style={{ color: "white", fontSize: 13 }}>{createdAt} - </Text>
+      <Text numberOfLines={1} style={{ fontSize: 13, color: "white", flex: 1 }}>
+        {dbHumorLevel.find((humor) => humor.id == humorLevel)?.symbol}
         {"  "}
         {title}
       </Text>

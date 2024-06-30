@@ -21,7 +21,6 @@ import { TextInputMask } from "react-native-masked-text";
 
 export default function Index() {
   const annotations = useAnnotationData((state) => state);
-  const { theme } = useTheme();
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
@@ -58,7 +57,14 @@ export default function Index() {
     humorLevel: string;
     createdAt: string;
   }) => {
-    console.log(data);
+    const annotationData = {
+      ...data,
+      id: (annotations.data.length + 1).toString(),
+      humorLevel: data.humorLevel.toString(),
+    };    
+    setVisibleModal(false)
+    resetForm()
+    simulateRequest(() => annotations.createAnnotation(annotationData), { timeUntilRender: 2000 })
   };
 
   React.useEffect(() => {
@@ -240,15 +246,14 @@ export default function Index() {
             setVisibleModal(true);
           }}
           type="solid"
-          titleStyle={{ color: "#3d93e3" }}
+          titleStyle={{ color: "#3632a8" }}
           buttonStyle={{
             marginTop: 14,
             backgroundColor: "transparent",
-            borderColor: "#3d93e3",
             borderWidth: 1,
           }}
         >
-          <Plus size={20} color={"#3d93e3"} /> Novo processo
+          <Plus size={20} color={"#3632a8"} /> Nova anotação
         </Button>
         <Text style={{ marginTop: 20, marginBottom: 12 }}>
           Confira suas anotações do mês de{" "}
