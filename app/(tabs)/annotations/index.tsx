@@ -13,18 +13,16 @@ import { dbMonths, dbYears } from "@/data/auxData";
 import { useAnnotationData } from "@/store";
 import { dbHumorLevel } from "@/data/db";
 import { IAnnotation } from "@/data/types";
-import { ISelectBoxOption } from "@/components/inputs/SelectBox";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { format } from 'date-fns'
 
 export default function Index() {
   const annotations = useAnnotationData((state) => state);
   const { theme } = useTheme();
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
-  const [humorLevelValue, setHumorLevelValue] =
-    React.useState<ISelectBoxOption | null>(null);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
   const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
   const [modalTitle, setModalTitle] = React.useState<
@@ -32,7 +30,7 @@ export default function Index() {
   >("");
 
   const annotationModalSchema = yup.object({
-    resume: yup.string().required("Campo obrigatório"),
+    title: yup.string().required("Campo obrigatório"),
     description: yup.string().required("Campo obrigatório"),
     humorLevel: yup.string().required("Campo obrigatório"),
   });
@@ -45,18 +43,21 @@ export default function Index() {
   } = useForm({
     resolver: yupResolver(annotationModalSchema),
     defaultValues: {
-      resume: "",
+      title: "",
       description: "",
       humorLevel: "",
     },
   });
 
   const onSubmit = (data: {
-    resume: string;
+    title: string;
     description: string;
     humorLevel: string;
   }) => {
-    console.log(data);
+    const requestBody = {
+      ...data,
+      createdAt: format(new Date(), 'dd/MM/yyy')
+    }
   };
 
   React.useEffect(() => {
@@ -104,8 +105,8 @@ export default function Index() {
         title={modalTitle}
         visible={visibleModal}
         onRequestClose={() => {
-          resetForm()
-          setVisibleModal(false)
+          resetForm();
+          setVisibleModal(false);
         }}
       >
         <View>
@@ -116,14 +117,15 @@ export default function Index() {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
+                maxLength={25}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 placeholder="Título"
-                errorMessage={errors.resume?.message}
+                errorMessage={errors.title?.message}
               />
             )}
-            name="resume"
+            name="title"
           />
           <Controller
             control={control}
@@ -132,6 +134,8 @@ export default function Index() {
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
+                maxLength={50}
+                multiline
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -166,7 +170,7 @@ export default function Index() {
             name="humorLevel"
           />
           <Button
-            buttonStyle={{ marginTop: 50 }}
+            buttonStyle={{ marginTop: 40 }}
             title="Criar"
             onPress={handleSubmit(onSubmit)}
           />
@@ -246,7 +250,7 @@ export default function Index() {
                 createdAt={item.createdAt}
                 description={item.description}
                 humorLevel={item.humorLevel}
-                resume={item.resume}
+                title={item.title}
                 onDelete={handleDeleteAnnotation}
               />
             )}

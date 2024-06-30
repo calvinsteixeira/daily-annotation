@@ -14,7 +14,7 @@ const PreviewAnnotation = ({
   createdAt,
   onDelete,
   humorLevel,
-  resume,
+  title,
 }: IPreviewAnnotationComponent) => {
   const { theme } = useTheme();
   return (
@@ -32,7 +32,7 @@ const PreviewAnnotation = ({
       <Text numberOfLines={1} style={{ fontSize: 14, color: "white", flex: 1 }}>
         {dbHumorLevel.find((humor) => humor.level == humorLevel)?.symbol}
         {"  "}
-        {resume}
+        {title}
       </Text>
       <X
         onPress={() => onDelete(id)}

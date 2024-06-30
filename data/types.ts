@@ -2,7 +2,7 @@ interface IAnnotation {
     id: string;
     createdAt: string;
     humorLevel: number;
-    resume: string;
+    title: string;
     description: string;
 }
 
