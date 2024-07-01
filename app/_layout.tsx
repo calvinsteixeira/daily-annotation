@@ -3,7 +3,8 @@ import { ThemeProvider, createTheme } from "@rneui/themed";
 
 const theme = createTheme({
   lightColors: {
-    primary: "#3632a8",
+    // primary: "#3632a8",
+    primary: "#fa7523",
   },
   darkColors: {
     primary: "blue",
@@ -19,7 +20,8 @@ const theme = createTheme({
     },
     Button: {
       buttonStyle: {
-        borderColor: "#3632a8"
+        // borderColor: "#3632a8"
+        borderColor: "#fa7523"
       }
     }
   },
