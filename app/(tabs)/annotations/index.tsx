@@ -26,8 +26,10 @@ export default function Index() {
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
   const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
+  const [editableAnnotation, setEditableAnnotation] = React.useState<IAnnotation | null>(null)
+  const [modalMode, setModalMode] = React.useState<"edit" | "create">("create")
   const [modalTitle, setModalTitle] = React.useState<
-    "Nova anotação" | "Editar anotação" | "" | "Novo processo"
+    "Nova anotação" | "Editar anotação" | "Novo processo" | "Editar processo" | "" 
   >("");
 
   const annotationModalSchema = yup.object({
@@ -228,7 +230,7 @@ export default function Index() {
                     maxLength={25}
                     onBlur={onBlur}
                     onChangeText={onChange}
-                    value={value}
+                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.title : value}
                     placeholder="Título"
                     errorMessage={errors.title?.message}
                   />
@@ -246,7 +248,7 @@ export default function Index() {
                     multiline
                     onBlur={onBlur}
                     onChangeText={onChange}
-                    value={value}
+                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.description : value}
                     placeholder="Descrição"
                     errorMessage={errors.description?.message}
                   />
@@ -263,12 +265,14 @@ export default function Index() {
                     type={"datetime"}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    value={value}
+                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.createdAt : value}
+                    editable={!(modalMode == "edit")}                    
                     customTextInput={Input}
-                    customTextInputProps={{
-                      maxLength: 10,
+                    style={{  opacity: modalMode == "edit" ? 0.5 : 1}}
+                    customTextInputProps={{                      
+                      maxLength: 10,                      
                       placeholder: "Data",
-                      errorMessage: errors.createdAt?.message,
+                      errorMessage: errors.createdAt?.message,                      
                     }}
                   />
                 )}
@@ -288,7 +292,7 @@ export default function Index() {
                         value: humorLevel.id,
                       };
                     })}
-                    value={value}
+                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.humorLevel : value}
                     placeholder="Classificação do dia"
                     onChange={(selectedItem) => {
                       onChange(selectedItem.value);
@@ -302,7 +306,7 @@ export default function Index() {
             </ScrollView>
             <Button
               buttonStyle={{ marginTop: 40 }}
-              title="Criar"
+              title={modalMode == "edit" ? "Salvar alterações" : "Criar"}
               onPress={handleSubmit(onSubmit)}
             />
           </>
@@ -354,6 +358,7 @@ export default function Index() {
           <Button
             onPress={() => {
               setModalTitle("Novo processo");
+              setModalMode("create")
               setVisibleModal(true);
             }}
             type="solid"
@@ -393,6 +398,23 @@ export default function Index() {
                   description={item.description}
                   humorLevel={item.humorLevel}
                   title={item.title}
+                  onPress={() => {                          
+                    const annotation = annotations.data.find(annotation => annotation.id == item.id)
+                    if(annotation) {
+                      setEditableAnnotation(annotation)
+                      setModalTitle("Editar processo");
+                      setModalMode("edit")
+                      setVisibleModal(true) 
+                    } else {
+                      Toast.show({
+                        type: "error",
+                        text1: "Erro",
+                        text2: "Falha ao carregar os dados!",
+                        text1Style: { fontSize: 18 },
+                        text2Style: { fontSize: 17 },
+                      });
+                    }                                         
+                  }}
                   onDelete={handleDeleteAnnotation}
                 />
               )}
