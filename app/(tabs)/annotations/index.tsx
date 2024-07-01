@@ -26,13 +26,19 @@ export default function Index() {
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
   const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
-  const [editableAnnotation, setEditableAnnotation] = React.useState<IAnnotation | null>(null)
-  const [modalMode, setModalMode] = React.useState<"edit" | "create">("create")
+  const [editableAnnotation, setEditableAnnotation] =
+    React.useState<IAnnotation | null>(null);
+  const [modalMode, setModalMode] = React.useState<"edit" | "create">("create");
   const [modalTitle, setModalTitle] = React.useState<
-    "Nova anotação" | "Editar anotação" | "Novo processo" | "Editar processo" | "" 
+    | "Nova anotação"
+    | "Editar anotação"
+    | "Novo processo"
+    | "Editar processo"
+    | ""
   >("");
 
   const annotationModalSchema = yup.object({
+    id: yup.string().required(),
     title: yup.string().required("Campo obrigatório"),
     description: yup.string().required("Campo obrigatório"),
     humorLevel: yup.string().required("Campo obrigatório"),
@@ -43,10 +49,12 @@ export default function Index() {
     control,
     handleSubmit,
     reset: resetForm,
+    setValue: setFormValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(annotationModalSchema),
     defaultValues: {
+      id: "",
       title: "",
       description: "",
       humorLevel: "",
@@ -54,71 +62,121 @@ export default function Index() {
     },
   });
 
+  function createAnnotation(annotationData: IAnnotation) {
+    try {
+      const isDuplicatedAnnotation = annotations.data.find(
+        (annotation) => annotation.id == annotationData.id
+      );
+
+      if (isDuplicatedAnnotation) {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Falha na requisição!",
+          text1Style: { fontSize: 18 },
+          text2Style: { fontSize: 17 },
+        });
+        throw Error("Registros duplicados");
+      }
+
+      annotations.createAnnotation(annotationData);
+      const latestAnnotationRecords = annotations.getRecords();
+      const recentlyAddedAnnotation = latestAnnotationRecords.find(
+        (annotation) => annotation.id == annotationData.id
+      );
+
+      if (recentlyAddedAnnotation) {
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: "Sua anotação acabou de ser criada!",
+          text1Style: { fontSize: 18 },
+          text2Style: { fontSize: 17 },
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Falha na requisição!",
+          text1Style: { fontSize: 18 },
+          text2Style: { fontSize: 17 },
+        });
+        throw Error("Registro não cadastrado");
+      }
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Falha na requisição!",
+        text1Style: { fontSize: 18 },
+        text2Style: { fontSize: 17 },
+      });
+    }
+  }
+
+  function updateAnnotation(annotationData: IAnnotation) {
+    try {
+      const annotationExists = annotations.data.find(
+        (annotation) => annotation.id == annotationData.id
+      );
+
+      if (!annotationExists) {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: "Falha na requisição!",
+          text1Style: { fontSize: 18 },
+          text2Style: { fontSize: 17 },
+        });
+        throw Error("Registro inexistente na base");
+      }
+
+      annotations.updateAnnotation(annotationData);
+
+      Toast.show({
+        type: "success",
+        text1: "Sucesso",
+        text2: "Anotação atualizada com sucesso!",
+        text1Style: { fontSize: 18 },
+        text2Style: { fontSize: 17 },
+      });
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Falha na requisição!",
+        text1Style: { fontSize: 18 },
+        text2Style: { fontSize: 17 },
+      });
+    }
+  }
+
   const onSubmit = (data: {
+    id: string;
     title: string;
     description: string;
     humorLevel: string;
     createdAt: string;
   }) => {
-    const annotationData = {
-      ...data,
-      id: (annotations.data.length + 1).toString(),
-      humorLevel: data.humorLevel.toString(),
-    };
     setVisibleModal(false);
     resetForm();
     simulateRequest(
       () => {
-        try {
-          annotationData.id = "1";
-          const isDuplicatedAnnotation = annotations.data.find(
-            (annotation) => annotation.id == annotationData.id
-          );
+        const annotationData = {
+          ...data,
+          id:
+            modalMode == "edit"
+              ? data.id
+              : (annotations.data.length + 1).toString(),
+          humorLevel: data.humorLevel.toString(),
+        };
 
-          if (isDuplicatedAnnotation) {
-            Toast.show({
-              type: "error",
-              text1: "Erro",
-              text2: "Falha na requisição!",
-              text1Style: { fontSize: 18 },
-              text2Style: { fontSize: 17 },
-            });
-            throw Error("Registros duplicados");
-          }
-
-          annotations.createAnnotation(annotationData);
-          const latestAnnotationRecords = annotations.getRecords();
-          const recentlyAddedAnnotation = latestAnnotationRecords.find(
-            (annotation) => annotation.id == annotationData.id
-          );
-
-          if (recentlyAddedAnnotation) {
-            Toast.show({
-              type: "success",
-              text1: "Sucesso",
-              text2: "Sua anotação acabou de ser criada!",
-              text1Style: { fontSize: 18 },
-              text2Style: { fontSize: 17 },
-            });
-          } else {
-            Toast.show({
-              type: "error",
-              text1: "Erro",
-              text2: "Falha na requisição!",
-              text1Style: { fontSize: 18 },
-              text2Style: { fontSize: 17 },
-            });
-            throw Error("Registro não cadastrado");
-          }
-        } catch (error) {
-          console.log(error);
-          Toast.show({
-            type: "error",
-            text1: "Erro",
-            text2: "Falha na requisição!",
-            text1Style: { fontSize: 18 },
-            text2Style: { fontSize: 17 },
-          });
+        if (modalMode == "create") {
+          createAnnotation(annotationData);
+        } else {
+          updateAnnotation(annotationData);
         }
       },
       {
@@ -160,14 +218,18 @@ export default function Index() {
             simulateRequest(
               () => {
                 try {
-                  const annotationToDelete = annotations.data.find(annotation => annotation.id == annotationId)
+                  const annotationToDelete = annotations.data.find(
+                    (annotation) => annotation.id == annotationId
+                  );
 
-                  if(annotationToDelete) {
+                  if (annotationToDelete) {
                     annotations.deleteAnnotation(annotationId);
-                    const latestAnnotationRecords = annotations.getRecords()
-                    const deletedAnnotation = latestAnnotationRecords.find(annotation => annotation.id == annotationId)
+                    const latestAnnotationRecords = annotations.getRecords();
+                    const deletedAnnotation = latestAnnotationRecords.find(
+                      (annotation) => annotation.id == annotationId
+                    );
 
-                    if(deletedAnnotation) {
+                    if (deletedAnnotation) {
                       Toast.show({
                         type: "error",
                         text1: "Erro",
@@ -175,7 +237,7 @@ export default function Index() {
                         text1Style: { fontSize: 18 },
                         text2Style: { fontSize: 17 },
                       });
-                      throw Error('Registro não removido')
+                      throw Error("Registro não removido");
                     } else {
                       Toast.show({
                         type: "success",
@@ -185,7 +247,7 @@ export default function Index() {
                         text2Style: { fontSize: 17 },
                       });
                     }
-                  }                  
+                  }
                 } catch (error) {
                   console.log(error);
                   Toast.show({
@@ -230,7 +292,7 @@ export default function Index() {
                     maxLength={25}
                     onBlur={onBlur}
                     onChangeText={onChange}
-                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.title : value}
+                    value={value}
                     placeholder="Título"
                     errorMessage={errors.title?.message}
                   />
@@ -248,7 +310,7 @@ export default function Index() {
                     multiline
                     onBlur={onBlur}
                     onChangeText={onChange}
-                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.description : value}
+                    value={value}
                     placeholder="Descrição"
                     errorMessage={errors.description?.message}
                   />
@@ -265,14 +327,14 @@ export default function Index() {
                     type={"datetime"}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.createdAt : value}
-                    editable={!(modalMode == "edit")}                    
+                    value={value}
+                    editable={!(modalMode == "edit")}
                     customTextInput={Input}
-                    style={{  opacity: modalMode == "edit" ? 0.5 : 1}}
-                    customTextInputProps={{                      
-                      maxLength: 10,                      
+                    style={{ opacity: modalMode == "edit" ? 0.5 : 1 }}
+                    customTextInputProps={{
+                      maxLength: 10,
                       placeholder: "Data",
-                      errorMessage: errors.createdAt?.message,                      
+                      errorMessage: errors.createdAt?.message,
                     }}
                   />
                 )}
@@ -292,7 +354,7 @@ export default function Index() {
                         value: humorLevel.id,
                       };
                     })}
-                    value={modalMode == "edit" && editableAnnotation ? editableAnnotation.humorLevel : value}
+                    value={value}
                     placeholder="Classificação do dia"
                     onChange={(selectedItem) => {
                       onChange(selectedItem.value);
@@ -358,7 +420,7 @@ export default function Index() {
           <Button
             onPress={() => {
               setModalTitle("Novo processo");
-              setModalMode("create")
+              setModalMode("create");
               setVisibleModal(true);
             }}
             type="solid"
@@ -398,13 +460,22 @@ export default function Index() {
                   description={item.description}
                   humorLevel={item.humorLevel}
                   title={item.title}
-                  onPress={() => {                          
-                    const annotation = annotations.data.find(annotation => annotation.id == item.id)
-                    if(annotation) {
-                      setEditableAnnotation(annotation)
+                  onPress={() => {
+                    const annotation = annotations.data.find(
+                      (annotation) => annotation.id == item.id
+                    );
+                    if (annotation) {
+                      resetForm({
+                        id: annotation.id,
+                        title: annotation.title,
+                        humorLevel: annotation.humorLevel,
+                        description: annotation.description,
+                        createdAt: annotation.createdAt,
+                      });
+                      // setEditableAnnotation(annotation);
                       setModalTitle("Editar processo");
-                      setModalMode("edit")
-                      setVisibleModal(true) 
+                      setModalMode("edit");
+                      setVisibleModal(true);
                     } else {
                       Toast.show({
                         type: "error",
@@ -413,7 +484,7 @@ export default function Index() {
                         text1Style: { fontSize: 18 },
                         text2Style: { fontSize: 17 },
                       });
-                    }                                         
+                    }
                   }}
                   onDelete={handleDeleteAnnotation}
                 />

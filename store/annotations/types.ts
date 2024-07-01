@@ -4,6 +4,7 @@ interface IUseAnnotationData {
     data: IAnnotation[]
     deleteAnnotation: (annotationId: IAnnotation['id']) => void
     createAnnotation: (annotationData: IAnnotation) => void
+    updateAnnotation: (annotationData: IAnnotation) => void
     getRecords: () => IAnnotation[]
 }
 
