@@ -67,8 +67,8 @@ export default function Index() {
     resetForm();
     simulateRequest(
       () => {
-        try {       
-          annotationData.id = "1"  
+        try {
+          annotationData.id = "1";
           const isDuplicatedAnnotation = annotations.data.find(
             (annotation) => annotation.id == annotationData.id
           );
@@ -81,14 +81,16 @@ export default function Index() {
               text1Style: { fontSize: 18 },
               text2Style: { fontSize: 17 },
             });
-            throw Error('Registros duplicados')
+            throw Error("Registros duplicados");
           }
 
-          annotations.createAnnotation(annotationData)
-          const updatedAnnotations = annotations.getRecords()
-          const recentlyAddedAnnotation = updatedAnnotations.find(annotation => annotation.id == annotationData.id)
-          
-          if(recentlyAddedAnnotation) {
+          annotations.createAnnotation(annotationData);
+          const latestAnnotationRecords = annotations.getRecords();
+          const recentlyAddedAnnotation = latestAnnotationRecords.find(
+            (annotation) => annotation.id == annotationData.id
+          );
+
+          if (recentlyAddedAnnotation) {
             Toast.show({
               type: "success",
               text1: "Sucesso",
@@ -104,10 +106,10 @@ export default function Index() {
               text1Style: { fontSize: 18 },
               text2Style: { fontSize: 17 },
             });
-            throw Error('Registro não cadastrado')
+            throw Error("Registro não cadastrado");
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
           Toast.show({
             type: "error",
             text1: "Erro",
@@ -115,7 +117,7 @@ export default function Index() {
             text1Style: { fontSize: 18 },
             text2Style: { fontSize: 17 },
           });
-        }        
+        }
       },
       {
         timeUntilRender: 2000,
@@ -155,15 +157,43 @@ export default function Index() {
           onPress: () =>
             simulateRequest(
               () => {
-                annotations.deleteAnnotation(annotationId);
+                try {
+                  const annotationToDelete = annotations.data.find(annotation => annotation.id == annotationId)
 
-                Toast.show({
-                  type: "success",
-                  text1: "Sucesso",
-                  text2: "Anotação removida!",
-                  text1Style: { fontSize: 18 },
-                  text2Style: { fontSize: 17 },
-                });
+                  if(annotationToDelete) {
+                    annotations.deleteAnnotation(annotationId);
+                    const latestAnnotationRecords = annotations.getRecords()
+                    const deletedAnnotation = latestAnnotationRecords.find(annotation => annotation.id == annotationId)
+
+                    if(deletedAnnotation) {
+                      Toast.show({
+                        type: "error",
+                        text1: "Erro",
+                        text2: "Falha na requisição!",
+                        text1Style: { fontSize: 18 },
+                        text2Style: { fontSize: 17 },
+                      });
+                      throw Error('Registro não removido')
+                    } else {
+                      Toast.show({
+                        type: "success",
+                        text1: "Sucesso",
+                        text2: "Anotação removida!",
+                        text1Style: { fontSize: 18 },
+                        text2Style: { fontSize: 17 },
+                      });
+                    }
+                  }                  
+                } catch (error) {
+                  console.log(error);
+                  Toast.show({
+                    type: "error",
+                    text1: "Erro",
+                    text2: "Falha na requisição!",
+                    text1Style: { fontSize: 18 },
+                    text2Style: { fontSize: 17 },
+                  });
+                }
               },
               {
                 timeUntilRender: 1000,
