@@ -117,30 +117,21 @@ export default function Index() {
 
   function updateAnnotation(annotationData: IAnnotation) {
     try {
-      const annotationExists = annotations.data.find(
-        (annotation) => annotation.id == annotationData.id
-      );
+      const result = annotations.updateAnnotation(annotationData);
 
-      if (!annotationExists) {
+      if (result.statusCode == 200) {
         Toast.show({
-          type: "error",
-          text1: "Erro",
-          text2: "Falha na requisição!",
+          type: "success",
+          text1: "Sucesso",
+          text2: "Dados alterados com sucesso!",
           text1Style: { fontSize: 18 },
           text2Style: { fontSize: 17 },
         });
+      } else if (result.statusCode == 404) {
         throw Error("Registro inexistente na base");
+      } else {
+        throw Error;
       }
-
-      annotations.updateAnnotation(annotationData);
-
-      Toast.show({
-        type: "success",
-        text1: "Sucesso",
-        text2: "Anotação atualizada com sucesso!",
-        text1Style: { fontSize: 18 },
-        text2Style: { fontSize: 17 },
-      });
     } catch (error) {
       console.log(error);
       Toast.show({
