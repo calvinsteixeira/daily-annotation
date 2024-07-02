@@ -4,7 +4,7 @@ import { IApiResponse } from "@/types/utils"
 interface IUseAnnotationData {
     data: IAnnotation[]
     deleteAnnotation: (annotationId: IAnnotation['id']) => void
-    createAnnotation: (annotationData: IAnnotation) => void
+    createAnnotation: (annotationData: Omit<IAnnotation, 'id'>) => void
     updateAnnotation: (annotationData: IAnnotation) => IApiResponse
     getRecords: () => IAnnotation[]
 }

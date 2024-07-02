@@ -62,7 +62,7 @@ export default function Index() {
     },
   });
 
-  function createAnnotation(annotationData: IAnnotation) {
+  function createAnnotation(annotationData: { id?: string, title: string; description: string; createdAt: string; humorLevel: string }) {
     try {
       const isDuplicatedAnnotation = annotations.data.find(
         (annotation) => annotation.id == annotationData.id

@@ -10,7 +10,12 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
       data: state.data.filter((annotation) => annotation.id != annotationId),
     })),
   createAnnotation: (annotationData) =>
-    set((state) => ({ data: [...state.data, annotationData] })),
+    set((state) => ({
+      data: [
+        ...state.data,
+        { ...annotationData, id: (state.data.length + 1).toString() },
+      ],
+    })),
   updateAnnotation: (annotationData) => {
     try {
       const dataStore = get().data;
@@ -37,7 +42,7 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
           statusCode: 200,
         };
       }
-    } catch (error) {      
+    } catch (error) {
       return {
         hasError: true,
         message: "Falha na requisição",
