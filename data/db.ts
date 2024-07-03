@@ -37,6 +37,22 @@ const dbAnnotation: IAnnotation[] = [
       "Hoje eu acordei bem, tomei um banho e café da manhã bem cedo, logo após minha aula da faculdade. Fui super produtivo, o dia estava bonito, com bastante sol porém com um clima agradável, nem frio e nem calor. Durante a noite continuei meus projetos e fui até a sorveteria comer um açaí com minha esposa, depois assistimos Harry Potter.",
     humorLevel: "3",
     title: "Harry Potter e Açaí",
+  }, 
+  {
+    id: "3",
+    createdAt: "20/07/2022",
+    description:
+      "Hoje eu acordei bem, tomei um banho e café da manhã bem cedo, logo após minha aula da faculdade. Fui super produtivo, o dia estava bonito, com bastante sol porém com um clima agradável, nem frio e nem calor. Durante a noite continuei meus projetos e fui até a sorveteria comer um açaí com minha esposa, depois assistimos Harry Potter.",
+    humorLevel: "3",
+    title: "Harry Potter e Açaí",
+  },
+  {
+    id: "4",
+    createdAt: "01/10/2015",
+    description:
+      "Hoje eu acordei bem, tomei um banho e café da manhã bem cedo, logo após minha aula da faculdade. Fui super produtivo, o dia estava bonito, com bastante sol porém com um clima agradável, nem frio e nem calor. Durante a noite continuei meus projetos e fui até a sorveteria comer um açaí com minha esposa, depois assistimos Harry Potter.",
+    humorLevel: "3",
+    title: "Harry Potter e Açaí",
   } 
 ];
 

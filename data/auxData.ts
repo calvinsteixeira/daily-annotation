@@ -3,6 +3,10 @@ const dbYears = [
       label: "2024",
       value: "2024",
     },
+    {
+      label: "2022",
+      value: "2022",
+    },
   ];
   
   const dbMonths = [

@@ -22,6 +22,9 @@ import Toast from "react-native-toast-message";
 
 export default function Index() {
   const annotations = useAnnotationData((state) => state);
+  const [filteredData, setFilteredData] = React.useState<IAnnotation[]>(
+    filterData(dbMonths[0].value, dbYears[0].value)
+  );
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
@@ -40,9 +43,14 @@ export default function Index() {
     title: yup.string().required("Campo obrigatório"),
     description: yup.string().required("Campo obrigatório"),
     humorLevel: yup.string().required("Campo obrigatório"),
-    createdAt: yup.string().required("Campo obrigatório").test('unique', 'Essa data já foi utilizada', (value) => {
-      return !annotations.data.some(annotation => annotation.createdAt == value);
-    }),
+    createdAt: yup
+      .string()
+      .required("Campo obrigatório")
+      .test("unique", "Essa data já foi utilizada", (value) => {
+        return !annotations.data.some(
+          (annotation) => annotation.createdAt == value
+        );
+      }),
   });
 
   const {
@@ -59,6 +67,17 @@ export default function Index() {
       createdAt: format(new Date(), "dd/MM/yyyy").toString(),
     },
   });
+
+  function filterData(filterMonth: string, filterYear: string) {
+    return annotations.data.filter((annotation) => {
+      const [annotationDay, annotationMonth, annotationYear] =
+        annotation.createdAt.split("/");
+      return (
+        parseInt(annotationYear) === parseInt(filterYear) &&
+        parseInt(annotationMonth) === parseInt(filterMonth)
+      );
+    });
+  }
 
   function createAnnotation(annotationData: Omit<IAnnotation, "id">) {
     try {
@@ -379,6 +398,9 @@ export default function Index() {
                 placeholder="Selecionar ano"
                 onChange={(item) => {
                   setYearsFilterValue(item);
+                  setFilteredData(
+                    filterData(item.value, monthFilterValue.value)
+                  );
                 }}
               />
             </View>
@@ -397,6 +419,9 @@ export default function Index() {
                 placeholder="Selecionar mês"
                 onChange={(item) => {
                   setMonthFilterValue(item);
+                  setFilteredData(
+                    filterData(item.value, yearsFilterValue.value)
+                  );
                 }}
               />
             </View>
@@ -419,7 +444,9 @@ export default function Index() {
           </Button>
           <Text style={{ marginTop: 20, marginBottom: 12 }}>
             Confira suas anotações do mês de{" "}
-            <Text style={{ fontWeight: 700 }}>{monthFilterValue.label}</Text>:
+            <Text style={{ fontWeight: 700 }}>{monthFilterValue.label}</Text>
+            {" "}de{" "}
+            <Text style={{ fontWeight: 700 }}>{yearsFilterValue.label}</Text>
           </Text>
           {loadingData ? (
             <View style={{ flexDirection: "column", gap: 10 }}>
@@ -431,7 +458,7 @@ export default function Index() {
             </View>
           ) : (
             <FlatList
-              data={annotations.data}
+              data={filteredData}
               style={{ marginBottom: 14 }}
               keyExtractor={(item) => item.id}
               ItemSeparatorComponent={() => (

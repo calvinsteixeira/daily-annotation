@@ -9,46 +9,45 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
     set((state) => ({
       data: state.data.filter((annotation) => annotation.id != annotationId),
     })),
-  createAnnotation: (annotationData) => {    
+  createAnnotation: (annotationData) => {
     function updateData() {
-      return get().data
+      return get().data;
     }
-    
+
     try {
-      
-        
-        let dataStore = updateData()  
+      let dataStore = updateData();
 
-        const duplicatedDate = dataStore.some(annotation => annotation.createdAt == annotationData.createdAt)
+      const duplicatedDate = dataStore.some(
+        (annotation) => annotation.createdAt == annotationData.createdAt
+      );
 
-        if(duplicatedDate) {
-          return {
-            hasError: true,
-            message: "A data informada já existe",
-            statusCode: 409
-          }
-        }
+      if (duplicatedDate) {
+        return {
+          hasError: true,
+          message: "A data informada já existe",
+          statusCode: 409,
+        };
+      }
 
-        const lastId = dataStore.length + 1
+      const lastId = dataStore.length + 1;
       set((state) => ({
         data: [
           ...state.data,
           { ...annotationData, id: (dataStore.length + 1).toString() },
         ],
-      }))      
-      dataStore = updateData()  
-      const registerCreated = lastId != dataStore.length + 1
+      }));
+      dataStore = updateData();
+      const registerCreated = lastId != dataStore.length + 1;
 
-      if(registerCreated) {
+      if (registerCreated) {
         return {
           hasError: false,
           message: "Anotação criada com sucesso",
           statusCode: 201,
         };
       } else {
-        throw Error('ServerError: Falha ao criar o registro')
+        throw Error("ServerError: Falha ao criar o registro");
       }
-      
     } catch (error) {
       return {
         hasError: true,
@@ -56,8 +55,7 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
         statusCode: 500,
       };
     }
-    
-  },    
+  },
   updateAnnotation: (annotationData) => {
     try {
       const dataStore = get().data;
@@ -65,8 +63,8 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
         (annotation) => annotation.id == annotationData.id
       );
 
-      if (!registerExists) {        
-        throw Error('ServerError: Registro inexistente na base')
+      if (!registerExists) {
+        throw Error("ServerError: Registro inexistente na base");
       } else {
         set((state) => ({
           data: state.data.map((annotation) =>
@@ -81,7 +79,7 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
         };
       }
     } catch (error) {
-      console.log(Error)
+      console.log(Error);
       return {
         hasError: true,
         message: "Falha na requisição",
