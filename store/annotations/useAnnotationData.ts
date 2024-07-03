@@ -9,13 +9,42 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
     set((state) => ({
       data: state.data.filter((annotation) => annotation.id != annotationId),
     })),
-  createAnnotation: (annotationData) =>
-    set((state) => ({
-      data: [
-        ...state.data,
-        { ...annotationData, id: (state.data.length + 1).toString() },
-      ],
-    })),
+  createAnnotation: (annotationData) => {    
+    function updateData() {
+      return get().data
+    }
+    
+    try {
+      let dataStore = updateData()  
+      const lastId = dataStore.length + 1
+      set((state) => ({
+        data: [
+          ...state.data,
+          { ...annotationData, id: (dataStore.length + 1).toString() },
+        ],
+      }))      
+      dataStore = updateData()  
+      const registerCreated = lastId != dataStore.length + 1
+
+      if(registerCreated) {
+        return {
+          hasError: false,
+          message: "Anotação criada com sucesso",
+          statusCode: 201,
+        };
+      } else {
+        throw Error('ServerError: Falha ao criar o registro')
+      }
+      
+    } catch (error) {
+      return {
+        hasError: true,
+        message: "Falha na requisição",
+        statusCode: 500,
+      };
+    }
+    
+  },    
   updateAnnotation: (annotationData) => {
     try {
       const dataStore = get().data;
@@ -23,12 +52,8 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
         (annotation) => annotation.id == annotationData.id
       );
 
-      if (!registerExists) {
-        return {
-          hasError: true,
-          message: "Registro inexistente na base",
-          statusCode: 404,
-        };
+      if (!registerExists) {        
+        throw Error('ServerError: Registro inexistente na base')
       } else {
         set((state) => ({
           data: state.data.map((annotation) =>
@@ -43,6 +68,7 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
         };
       }
     } catch (error) {
+      console.log(Error)
       return {
         hasError: true,
         message: "Falha na requisição",

@@ -25,9 +25,7 @@ export default function Index() {
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
-  const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
-  const [editableAnnotation, setEditableAnnotation] =
-    React.useState<IAnnotation | null>(null);
+  const [visibleModal, setVisibleModal] = React.useState<boolean>(false);  
   const [modalMode, setModalMode] = React.useState<"edit" | "create">("create");
   const [modalTitle, setModalTitle] = React.useState<
     | "Nova anotação"
@@ -37,8 +35,8 @@ export default function Index() {
     | ""
   >("");
 
-  const annotationModalSchema = yup.object({
-    id: yup.string().required(),
+  const annotationModalSchema = yup.object().shape({
+    id: yup.string(),
     title: yup.string().required("Campo obrigatório"),
     description: yup.string().required("Campo obrigatório"),
     humorLevel: yup.string().required("Campo obrigatório"),
@@ -49,12 +47,10 @@ export default function Index() {
     control,
     handleSubmit,
     reset: resetForm,
-    setValue: setFormValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(annotationModalSchema),
-    defaultValues: {
-      id: "",
+    defaultValues: {      
       title: "",
       description: "",
       humorLevel: "",
@@ -62,30 +58,11 @@ export default function Index() {
     },
   });
 
-  function createAnnotation(annotationData: { id?: string, title: string; description: string; createdAt: string; humorLevel: string }) {
-    try {
-      const isDuplicatedAnnotation = annotations.data.find(
-        (annotation) => annotation.id == annotationData.id
-      );
+  function createAnnotation(annotationData: Omit<IAnnotation, "id">) {
+    try { 
+      const result = annotations.createAnnotation(annotationData);      
 
-      if (isDuplicatedAnnotation) {
-        Toast.show({
-          type: "error",
-          text1: "Erro",
-          text2: "Falha na requisição!",
-          text1Style: { fontSize: 18 },
-          text2Style: { fontSize: 17 },
-        });
-        throw Error("Registros duplicados");
-      }
-
-      annotations.createAnnotation(annotationData);
-      const latestAnnotationRecords = annotations.getRecords();
-      const recentlyAddedAnnotation = latestAnnotationRecords.find(
-        (annotation) => annotation.id == annotationData.id
-      );
-
-      if (recentlyAddedAnnotation) {
+      if (result.statusCode == 201) {
         Toast.show({
           type: "success",
           text1: "Sucesso",
@@ -101,7 +78,7 @@ export default function Index() {
           text1Style: { fontSize: 18 },
           text2Style: { fontSize: 17 },
         });
-        throw Error("Registro não cadastrado");
+        throw Error("ClientError: Registro não cadastrado");
       }
     } catch (error) {
       console.log(error);
@@ -128,7 +105,7 @@ export default function Index() {
           text2Style: { fontSize: 17 },
         });
       } else if (result.statusCode == 404) {
-        throw Error("Registro inexistente na base");
+        throw Error("ClientError: Registro inexistente na base");
       } else {
         throw Error;
       }
@@ -144,15 +121,15 @@ export default function Index() {
     }
   }
 
-  const onSubmit = (data: {
-    id: string;
-    title: string;
-    description: string;
-    humorLevel: string;
-    createdAt: string;
-  }) => {
+  const onSubmit = (data: any) => {
     setVisibleModal(false);
-    resetForm();
+    resetForm({
+      createdAt: format(new Date(), "dd/MM/yyyy").toString(),
+      description: "",
+      humorLevel: "",
+      id: "",
+      title: ""
+    });
     simulateRequest(
       () => {
         const annotationData = {
@@ -228,7 +205,7 @@ export default function Index() {
                         text1Style: { fontSize: 18 },
                         text2Style: { fontSize: 17 },
                       });
-                      throw Error("Registro não removido");
+                      throw Error("ClientError: Registro não removido");
                     } else {
                       Toast.show({
                         type: "success",
@@ -267,7 +244,13 @@ export default function Index() {
           title={modalTitle}
           visible={visibleModal}
           onRequestClose={() => {
-            resetForm();
+            resetForm({
+              createdAt: format(new Date(), "dd/MM/yyyy").toString(),
+              description: "",
+              humorLevel: "",
+              id: "",
+              title: ""
+            });
             setVisibleModal(false);
           }}
         >
