@@ -15,8 +15,21 @@ const useAnnotationData = create<IUseAnnotationData>((set, get) => ({
     }
     
     try {
-      let dataStore = updateData()  
-      const lastId = dataStore.length + 1
+      
+        
+        let dataStore = updateData()  
+
+        const duplicatedDate = dataStore.some(annotation => annotation.createdAt == annotationData.createdAt)
+
+        if(duplicatedDate) {
+          return {
+            hasError: true,
+            message: "A data informada já existe",
+            statusCode: 409
+          }
+        }
+
+        const lastId = dataStore.length + 1
       set((state) => ({
         data: [
           ...state.data,

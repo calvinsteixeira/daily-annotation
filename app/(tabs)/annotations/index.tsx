@@ -25,7 +25,7 @@ export default function Index() {
   const [monthFilterValue, setMonthFilterValue] = React.useState(dbMonths[0]);
   const [yearsFilterValue, setYearsFilterValue] = React.useState(dbYears[0]);
   const [loadingData, setLoadingData] = React.useState<boolean>(true);
-  const [visibleModal, setVisibleModal] = React.useState<boolean>(false);  
+  const [visibleModal, setVisibleModal] = React.useState<boolean>(false);
   const [modalMode, setModalMode] = React.useState<"edit" | "create">("create");
   const [modalTitle, setModalTitle] = React.useState<
     | "Nova anotação"
@@ -40,7 +40,9 @@ export default function Index() {
     title: yup.string().required("Campo obrigatório"),
     description: yup.string().required("Campo obrigatório"),
     humorLevel: yup.string().required("Campo obrigatório"),
-    createdAt: yup.string().required("Campo obrigatório"),
+    createdAt: yup.string().required("Campo obrigatório").test('unique', 'Essa data já foi utilizada', (value) => {
+      return !annotations.data.some(annotation => annotation.createdAt == value);
+    }),
   });
 
   const {
@@ -50,7 +52,7 @@ export default function Index() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(annotationModalSchema),
-    defaultValues: {      
+    defaultValues: {
       title: "",
       description: "",
       humorLevel: "",
@@ -59,14 +61,22 @@ export default function Index() {
   });
 
   function createAnnotation(annotationData: Omit<IAnnotation, "id">) {
-    try { 
-      const result = annotations.createAnnotation(annotationData);      
+    try {
+      const result = annotations.createAnnotation(annotationData);
 
       if (result.statusCode == 201) {
         Toast.show({
           type: "success",
           text1: "Sucesso",
           text2: "Sua anotação acabou de ser criada!",
+          text1Style: { fontSize: 18 },
+          text2Style: { fontSize: 17 },
+        });
+      } else if (result.statusCode == 409) {
+        Toast.show({
+          type: "error",
+          text1: "Erro",
+          text2: result.message,
           text1Style: { fontSize: 18 },
           text2Style: { fontSize: 17 },
         });
@@ -92,85 +102,7 @@ export default function Index() {
     }
   }
 
-  function updateAnnotation(annotationData: IAnnotation) {
-    try {
-      const result = annotations.updateAnnotation(annotationData);
-
-      if (result.statusCode == 200) {
-        Toast.show({
-          type: "success",
-          text1: "Sucesso",
-          text2: "Dados alterados com sucesso!",
-          text1Style: { fontSize: 18 },
-          text2Style: { fontSize: 17 },
-        });
-      } else if (result.statusCode == 404) {
-        throw Error("ClientError: Registro inexistente na base");
-      } else {
-        throw Error;
-      }
-    } catch (error) {
-      console.log(error);
-      Toast.show({
-        type: "error",
-        text1: "Erro",
-        text2: "Falha na requisição!",
-        text1Style: { fontSize: 18 },
-        text2Style: { fontSize: 17 },
-      });
-    }
-  }
-
-  const onSubmit = (data: any) => {
-    setVisibleModal(false);
-    resetForm({
-      createdAt: format(new Date(), "dd/MM/yyyy").toString(),
-      description: "",
-      humorLevel: "",
-      id: "",
-      title: ""
-    });
-    simulateRequest(
-      () => {
-        const annotationData = {
-          ...data,
-          id:
-            modalMode == "edit"
-              ? data.id
-              : (annotations.data.length + 1).toString(),
-          humorLevel: data.humorLevel.toString(),
-        };
-
-        if (modalMode == "create") {
-          createAnnotation(annotationData);
-        } else {
-          updateAnnotation(annotationData);
-        }
-      },
-      {
-        timeUntilRender: 2000,
-      }
-    );
-  };
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setLoadingData(false);
-    }, 3500);
-  }, []);
-
-  function simulateRequest(
-    callBack: () => void,
-    timerOpts?: { timeUntilRender: number }
-  ) {
-    setLoadingData(true);
-    setTimeout(() => {
-      setLoadingData(false);
-      callBack();
-    }, timerOpts?.timeUntilRender || 3500);
-  }
-
-  function handleDeleteAnnotation(annotationId: IAnnotation["id"]) {
+  function deleteAnnotation(annotationId: IAnnotation["id"]) {
     Alert.alert(
       "Deletar anotação",
       "Tem certeza que deseja deletar essa anotação?",
@@ -237,6 +169,84 @@ export default function Index() {
     );
   }
 
+  function updateAnnotation(annotationData: IAnnotation) {
+    try {
+      const result = annotations.updateAnnotation(annotationData);
+
+      if (result.statusCode == 200) {
+        Toast.show({
+          type: "success",
+          text1: "Sucesso",
+          text2: "Dados alterados com sucesso!",
+          text1Style: { fontSize: 18 },
+          text2Style: { fontSize: 17 },
+        });
+      } else if (result.statusCode == 404) {
+        throw Error("ClientError: Registro inexistente na base");
+      } else {
+        throw Error;
+      }
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: "Erro",
+        text2: "Falha na requisição!",
+        text1Style: { fontSize: 18 },
+        text2Style: { fontSize: 17 },
+      });
+    }
+  }
+
+  const onSubmit = (data: any) => {
+    setVisibleModal(false);
+    resetForm({
+      createdAt: format(new Date(), "dd/MM/yyyy").toString(),
+      description: "",
+      humorLevel: "",
+      id: "",
+      title: "",
+    });
+    simulateRequest(
+      () => {
+        const annotationData = {
+          ...data,
+          id:
+            modalMode == "edit"
+              ? data.id
+              : (annotations.data.length + 1).toString(),
+          humorLevel: data.humorLevel.toString(),
+        };
+
+        if (modalMode == "create") {
+          createAnnotation(annotationData);
+        } else {
+          updateAnnotation(annotationData);
+        }
+      },
+      {
+        timeUntilRender: 2000,
+      }
+    );
+  };
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoadingData(false);
+    }, 3500);
+  }, []);
+
+  function simulateRequest(
+    callBack: () => void,
+    timerOpts?: { timeUntilRender: number }
+  ) {
+    setLoadingData(true);
+    setTimeout(() => {
+      setLoadingData(false);
+      callBack();
+    }, timerOpts?.timeUntilRender || 3500);
+  }
+
   return (
     <>
       <MainContainer>
@@ -249,7 +259,7 @@ export default function Index() {
               description: "",
               humorLevel: "",
               id: "",
-              title: ""
+              title: "",
             });
             setVisibleModal(false);
           }}
@@ -460,7 +470,7 @@ export default function Index() {
                       });
                     }
                   }}
-                  onDelete={handleDeleteAnnotation}
+                  onDelete={deleteAnnotation}
                 />
               )}
             />
