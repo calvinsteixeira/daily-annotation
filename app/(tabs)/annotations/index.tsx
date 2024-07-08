@@ -32,9 +32,7 @@ export default function Index() {
   const [modalMode, setModalMode] = React.useState<"edit" | "create">("create");
   const [modalTitle, setModalTitle] = React.useState<
     | "Nova anotação"
-    | "Editar anotação"
-    | "Novo processo"
-    | "Editar processo"
+    | "Editar anotação"   
     | ""
   >("");
 
@@ -377,7 +375,7 @@ export default function Index() {
           </>
         </CustomModal>
         <View style={{ flex: 1, paddingTop: 30 }}>
-          <Text style={globalTextStyles.titlePage}>Meus processos</Text>
+          <Text style={globalTextStyles.titlePage}>Minhas anotações</Text>
           <Text style={{ marginTop: 6 }}>
             Aqui você encontra todas as suas anotações, filtre pelo ano e mês se
             preferir.
@@ -428,7 +426,7 @@ export default function Index() {
           </View>
           <Button
             onPress={() => {
-              setModalTitle("Novo processo");
+              setModalTitle("Nova anotação");
               setModalMode("create");
               setVisibleModal(true);
             }}
@@ -484,7 +482,7 @@ export default function Index() {
                         createdAt: annotation.createdAt,
                       });
                       // setEditableAnnotation(annotation);
-                      setModalTitle("Editar processo");
+                      setModalTitle("Editar anotação");
                       setModalMode("edit");
                       setVisibleModal(true);
                     } else {
